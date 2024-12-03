@@ -1,13 +1,14 @@
 // import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
-import List from "./List";
+import Main from "./Main";
 import Groups from "./Groups";
 import { useState } from "react";
 import { User } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "../FirebaseConfig";
 import { useEffect } from "react";
+import CreateGroup from "./CreateGroup";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,8 +17,9 @@ const insideStack = createNativeStackNavigator();
 function InsideLayout() {
   return (
     <insideStack.Navigator>
-      <insideStack.Screen name="List" component={List} />
+      <insideStack.Screen name="Main" component={Main} />
       <insideStack.Screen name="Groups" component={Groups} />
+      <insideStack.Screen name="CreateGroup" component={CreateGroup} />
     </insideStack.Navigator>
   );
 }
