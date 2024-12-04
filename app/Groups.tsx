@@ -1,4 +1,4 @@
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Button } from "react-native";
 import { FIREBASE_DB, FIREBASE_AUTH } from "../FirebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect } from "react";
@@ -50,6 +50,8 @@ const Groups = () => {
     return (
         <>
             <View style={styles.container}>
+                <Button title="Create Group" onPress={() => navigation.navigate('CreateGroup' as never)} />
+                <Button title="Logout" onPress={() => FIREBASE_AUTH.signOut()} />
                 <FlatList
                     data={groups}
                     renderItem={({ item }) =>
@@ -94,7 +96,9 @@ export default Groups;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        padding: 10,
         paddingTop: 22,
+        flexDirection: 'column',
     },
     item: {
         padding: 10,

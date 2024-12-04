@@ -18,7 +18,6 @@ const insideStack = createNativeStackNavigator();
 function InsideLayout() {
   return (
     <insideStack.Navigator>
-      <insideStack.Screen name="Main" component={Main} />
       <insideStack.Screen name="Groups" component={Groups} />
       <insideStack.Screen name="CreateGroup" component={CreateGroup} />
       <insideStack.Screen name="Chat" component={Chat} />
