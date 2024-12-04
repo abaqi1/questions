@@ -1,8 +1,18 @@
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { FIREBASE_DB, FIREBASE_AUTH } from "../FirebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect } from "react";
 import { useState } from "react";
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+type RootStackParamList = {
+    Chat: {
+        groupId: string;
+        groupName: string;
+        messages: any[];
+    };
+};
 
 interface GroupItem {
     key: string;
@@ -13,6 +23,7 @@ const Groups = () => {
     const [groups, setGroups] = useState<GroupItem[]>([]);
     const currentUser = FIREBASE_AUTH.currentUser;
     console.log(`${currentUser?.uid} is logged in`);
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     useEffect(() => {
         const loadGroups = async () => {
@@ -28,15 +39,25 @@ const Groups = () => {
         loadGroups();
     }, []);
 
+    const handleGroupPress = (group: GroupItem) => {
+        navigation.navigate('Chat', {
+            groupId: group.key,
+            groupName: group.details.name,
+            messages: group.details.messages || []
+        });
+    };
+
     return (
         <>
             <View style={styles.container}>
                 <FlatList
                     data={groups}
-                    renderItem={({ item }) => <Text style={styles.item}>{item.details.name || "Unamed Group"}</Text>}
+                    renderItem={({ item }) =>
+                        <TouchableOpacity onPress={() => handleGroupPress(item)}>
+                            <Text style={styles.item}>{item.details.name || "Unamed Group"}</Text>
+                        </TouchableOpacity>}
                 />
             </View>
-            <Text style={styles.todoText}>TODO: Fetch Current Users Group Details</Text>
         </>
     );
 }

@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "./Login";
 import Main from "./Main";
 import Groups from "./Groups";
+import Chat from "./Chat";
 import { useState } from "react";
 import { User } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
@@ -20,6 +21,7 @@ function InsideLayout() {
       <insideStack.Screen name="Main" component={Main} />
       <insideStack.Screen name="Groups" component={Groups} />
       <insideStack.Screen name="CreateGroup" component={CreateGroup} />
+      <insideStack.Screen name="Chat" component={Chat} />
     </insideStack.Navigator>
   );
 }
