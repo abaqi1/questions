@@ -1,5 +1,5 @@
 import { View, Text } from 'react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute, NavigationProp } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useState, useEffect, useCallback } from 'react';
 import { GiftedChat } from 'react-native-gifted-chat'
@@ -7,14 +7,19 @@ import { doc, getDoc, updateDoc, arrayUnion, getFirestore } from 'firebase/fires
 import { FIREBASE_DB, FIREBASE_AUTH } from '../FirebaseConfig';
 import { Ionicons } from '@expo/vector-icons';  // Make sure to install expo/vector-icons if not already
 import { TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Platform } from 'react-native';
 
 const Stack = createNativeStackNavigator();
-
 
 type ChatRouteParams = {
     groupId: string;  // adjust type as needed
     groupName: string;
     messages: any;    // adjust type as needed
+}
+
+type AddUserRouteParams = {
+    groupId: string;
 }
 
 type User = {
@@ -30,19 +35,24 @@ type Message = {
     user: User;
 }
 
+type RootStackParamList = {
+    AddUser: { groupId: string };
+    // ... other screens
+};
+
 const Chat = () => {
     const route = useRoute<RouteProp<{ screen: ChatRouteParams }, 'screen'>>();
     const { groupId, groupName } = route.params;
     const currentUser = FIREBASE_AUTH.currentUser;
     const [chatMessages, setChatMessages] = useState<Message[]>([])
-    const navigation = useNavigation();
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     useEffect(() => {
         navigation.setOptions({
             title: groupName,
             headerRight: () => (
                 <TouchableOpacity
-                    onPress={() => navigation.navigate('AddUser')}
+                    onPress={() => handleAddUser({ groupId: groupId })}
                     style={{ marginRight: 10 }}
                 >
                     <Ionicons name="person-add" size={24} color="black" />
@@ -50,6 +60,10 @@ const Chat = () => {
             ),
         });
     }, [groupName, navigation]);
+
+    const handleAddUser = (userGroup: AddUserRouteParams) => {
+        navigation.navigate('AddUser', { groupId: userGroup.groupId });
+    }
 
     // Set the title of the chat screen
     useEffect(() => {
@@ -103,9 +117,10 @@ const Chat = () => {
                     _id: newMessage._id,
                     text: newMessage.text,
                     createdAt: newMessage.createdAt,
-                    user: newMessage.user
+                    user: newMessage.user,
                 })
             });
+            console.log(currentUser);
         } catch (error) {
             console.error('Error sending message:', error);
         }
@@ -113,15 +128,17 @@ const Chat = () => {
 
 
     return (
-        <GiftedChat
-            messages={chatMessages}
-            onSend={(messages: Message[]) => onSend(messages)}
-            user={{
-                _id: currentUser?.uid || '',
-                name: currentUser?.displayName || '',
-            }}
-        />
-    )
+        <SafeAreaView style={{ flex: 1 }} edges={['bottom']}>
+            <GiftedChat
+                messages={chatMessages}
+                onSend={(messages: Message[]) => onSend(messages)}
+                user={{
+                    _id: currentUser?.uid || '',
+                }}
+                bottomOffset={Platform.OS === 'ios' ? 34 : 0}  // Add padding for iPhone notch
+            />
+        </SafeAreaView>
+    );
 }
 
 export default Chat;

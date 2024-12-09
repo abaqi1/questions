@@ -5,6 +5,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "fire
 import { doc, setDoc } from "firebase/firestore";
 
 const Login = () => {
+    const [userName, setUserName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -35,7 +36,7 @@ const Login = () => {
                 uid: response.user.uid,
                 email: response.user.email,
                 groups: [],
-                name: response.user.displayName,
+                name: userName,
             });
 
         } catch (error: any) {
@@ -48,6 +49,7 @@ const Login = () => {
 
     return (
         <View style={styles.container}>
+            <TextInput style={styles.input} placeholder="User Name" value={userName} onChangeText={setUserName} />
             <TextInput style={styles.input} placeholder="Email" value={email} autoCapitalize="none" onChangeText={setEmail} />
             <TextInput secureTextEntry={true} style={styles.input} placeholder="Password" value={password} onChangeText={setPassword} />
 
