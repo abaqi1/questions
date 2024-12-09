@@ -34,7 +34,7 @@ const Groups = () => {
                     return { key: groupId, details };
                 })
             );
-            setGroups(groupsWithDetails);
+            setGroups(groupsWithDetails); // This might be fetching too much info about the groups
         };
         loadGroups();
     }, []);
