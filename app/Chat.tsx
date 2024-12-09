@@ -1,12 +1,12 @@
 import { View, Text } from 'react-native';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import MessageList from './Messagelist';
 import { useState, useEffect, useCallback } from 'react';
 import { GiftedChat } from 'react-native-gifted-chat'
 import { doc, getDoc, updateDoc, arrayUnion, getFirestore } from 'firebase/firestore';
 import { FIREBASE_DB, FIREBASE_AUTH } from '../FirebaseConfig';
-
+import { Ionicons } from '@expo/vector-icons';  // Make sure to install expo/vector-icons if not already
+import { TouchableOpacity } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +35,28 @@ const Chat = () => {
     const { groupId, groupName } = route.params;
     const currentUser = FIREBASE_AUTH.currentUser;
     const [chatMessages, setChatMessages] = useState<Message[]>([])
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        navigation.setOptions({
+            title: groupName,
+            headerRight: () => (
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('AddUser')}
+                    style={{ marginRight: 10 }}
+                >
+                    <Ionicons name="person-add" size={24} color="black" />
+                </TouchableOpacity>
+            ),
+        });
+    }, [groupName, navigation]);
+
+    // Set the title of the chat screen
+    useEffect(() => {
+        navigation.setOptions({
+            title: groupName
+        });
+    }, [groupName]);
 
     useEffect(() => {
         const loadMessages = async () => {
