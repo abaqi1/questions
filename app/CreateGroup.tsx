@@ -5,7 +5,30 @@ import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc } from 'fir
 
 const CreateGroup = ({ navigation }: any) => {
     const [groupName, setGroupName] = useState('');
+    const [interestInput, setInterestInput] = useState('');
+    const [dynamicInput, setDynamicInput] = useState('');
+    const [interests, setInterests] = useState<string[]>([]);
+    const [dynamics, setDynamics] = useState<string[]>([]);
+    const [showAdditionalFields, setShowAdditionalFields] = useState(false);
     const currentUser = FIREBASE_AUTH.currentUser;
+
+
+    const handleCreateGroup = () => {
+        if (!groupName.trim()) return;
+        setShowAdditionalFields(true);
+    };
+
+    const handleInterestSubmit = () => {
+        if (!interestInput.trim()) return;
+        setInterests(prev => [...prev, interestInput.trim()]);
+        setInterestInput(''); // Clear input after adding
+    };
+
+    const handleDynamicSubmit = () => {
+        if (!dynamicInput.trim()) return;
+        setDynamics(prev => [...prev, dynamicInput.trim()]);
+        setDynamicInput(''); // Clear input after adding
+    };
 
     const createGroup = async () => {
         if (!groupName.trim() || !currentUser) return;
@@ -16,7 +39,9 @@ const CreateGroup = ({ navigation }: any) => {
                 created: serverTimestamp(),
                 members: [currentUser.uid],
                 messages: {},
-                name: groupName.trim()
+                name: groupName.trim(),
+                interests: interests,
+                dynamics: dynamics,
             });
 
             // Update the user's groups array
@@ -43,7 +68,45 @@ const CreateGroup = ({ navigation }: any) => {
                 onChangeText={setGroupName}
                 placeholder="Enter group name"
             />
-            <Button title="Create Group" onPress={createGroup} />
+
+            {showAdditionalFields ? (
+                <>
+                    <View>
+                        <TextInput
+                            style={styles.input}
+                            value={interestInput}
+                            onChangeText={setInterestInput}
+                            onSubmitEditing={handleInterestSubmit}
+                            placeholder="Add an interest (press Enter)"
+                            returnKeyType="done"
+                        />
+                        {/* Display current interests */}
+                        {interests.map((interest, index) => (
+                            <Text key={index} style={styles.listItem}>• {interest}</Text>
+                        ))}
+                    </View>
+
+                    <View>
+                        <TextInput
+                            style={styles.input}
+                            value={dynamicInput}
+                            onChangeText={setDynamicInput}
+                            onSubmitEditing={handleDynamicSubmit}
+                            placeholder="Add a dynamic (press Enter)"
+                            returnKeyType="done"
+                        />
+                        {/* Display current dynamics */}
+                        {dynamics.map((dynamic, index) => (
+                            <Text key={index} style={styles.listItem}>• {dynamic}</Text>
+                        ))}
+                    </View>
+
+                    <Button title="Create Group" onPress={createGroup} />
+
+                </>
+            ) : (
+                <Button title="Pick Group Interest\Dynamic" onPress={handleCreateGroup} />
+            )}
         </View>
     );
 };
@@ -64,6 +127,11 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         borderRadius: 5,
     },
+    listItem: {
+        marginLeft: 10,
+        marginBottom: 5,
+        color: '#666',
+    }
 });
 
 export default CreateGroup;

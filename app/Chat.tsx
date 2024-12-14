@@ -36,7 +36,7 @@ type Message = {
 }
 
 type RootStackParamList = {
-    AddUser: { groupId: string };
+    GroupSettings: { groupId: string };
     // ... other screens
 };
 
@@ -62,7 +62,7 @@ const Chat = () => {
     }, [groupName, navigation]);
 
     const handleAddUser = (userGroup: AddUserRouteParams) => {
-        navigation.navigate('AddUser', { groupId: userGroup.groupId });
+        navigation.navigate('GroupSettings', { groupId: userGroup.groupId });
     }
 
     // Set the title of the chat screen
@@ -136,6 +136,7 @@ const Chat = () => {
                     _id: currentUser?.uid || '',
                 }}
                 bottomOffset={Platform.OS === 'ios' ? 34 : 0}  // Add padding for iPhone notch
+            // isTyping={true} Play with these settings
             />
         </SafeAreaView>
     );
