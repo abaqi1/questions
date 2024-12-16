@@ -38,3 +38,10 @@ yarn-error.*
 app-example
 
 .env
+
+
+# Firebase emulator files
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
