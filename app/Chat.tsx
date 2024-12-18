@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { RouteProp, useNavigation, useRoute, NavigationProp } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useState, useEffect, useCallback } from 'react';
@@ -53,9 +53,15 @@ const Chat = () => {
             headerRight: () => (
                 <TouchableOpacity
                     onPress={() => handleAddUser({ groupId: groupId })}
-                    style={{ marginRight: 10 }}
+                    style={styles.groupSettings}
                 >
-                    <Ionicons name="person-add" size={24} color="black" />
+                    <Ionicons
+                        name="settings-outline"
+                        size={20}
+                        color="#FFFFFF"
+                        style={{ marginRight: 5 }}
+                    />
+                    <Text style={styles.groupSettingsText}>GS</Text>
                 </TouchableOpacity>
             ),
         });
@@ -141,5 +147,33 @@ const Chat = () => {
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    groupSettings: {
+        alignSelf: 'flex-end',
+        backgroundColor: '#000000',
+        padding: 15,
+        margin: 10,
+        borderRadius: 8,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+        width: 60,
+        flexDirection: 'row',      // Add this to align icon and text horizontally
+        alignItems: 'center',     // Add this to center items vertically
+        justifyContent: 'center',  // Add this to center items horizontally
+    },
+    groupSettingsText: {
+        color: '#ffffff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+});
+
 
 export default Chat;
