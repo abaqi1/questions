@@ -52,7 +52,7 @@ const Chat = () => {
             title: groupName,
             headerRight: () => (
                 <TouchableOpacity
-                    onPress={() => handleAddUser({ groupId: groupId })}
+                    onPress={() => openGroupSettings({ groupId: groupId })}
                     style={styles.groupSettings}
                 >
                     <Ionicons
@@ -67,7 +67,7 @@ const Chat = () => {
         });
     }, [groupName, navigation]);
 
-    const handleAddUser = (userGroup: AddUserRouteParams) => {
+    const openGroupSettings = (userGroup: AddUserRouteParams) => {
         navigation.navigate('GroupSettings', { groupId: userGroup.groupId });
     }
 
@@ -85,6 +85,7 @@ const Chat = () => {
                 const groupSnap = await getDoc(groupRef);
 
                 if (groupSnap.exists()) {
+                    //TODO: Refactor - Either retrieve chat here or pass it in Chat after Group is pressed on the group page
                     const groupData = groupSnap.data();
 
                     // If chat is empty, set chat messages to empty array

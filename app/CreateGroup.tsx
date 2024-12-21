@@ -13,7 +13,7 @@ const CreateGroup = ({ navigation }: any) => {
     const currentUser = FIREBASE_AUTH.currentUser;
 
 
-    const handleCreateGroup = () => {
+    const setGroupDetails = () => {
         if (!groupName.trim()) return;
         setShowAdditionalFields(true);
     };
@@ -105,7 +105,7 @@ const CreateGroup = ({ navigation }: any) => {
 
                 </>
             ) : (
-                <Button title="Pick Group Interest\Dynamic" onPress={handleCreateGroup} />
+                <Button title="Pick Group Interest\Dynamic" onPress={setGroupDetails} />
             )}
         </View>
     );
