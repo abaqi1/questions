@@ -30,11 +30,11 @@ const Groups = () => {
             const userGroups = await fetchUserGroups(currentUser?.uid || '');
             const groupsWithDetails = await Promise.all(
                 userGroups.map(async (groupId: string) => {
-                    const details = await fetchGroupDetails(groupId);
+                    const details = await fetchGroupDetails(groupId); // Refactor - no need for details
                     return { key: groupId, details };
                 })
             );
-            setGroups(groupsWithDetails); // This might be fetching too much info about the groups
+            setGroups(groupsWithDetails); //TODO:  Refactor - fetchGroupNames, not group Details
         };
         loadGroups();
     }, []);
@@ -81,6 +81,8 @@ const fetchUserGroups = async (uuid: string) => {
 };
 
 const fetchGroupDetails = async (groupId: string) => {
+    // Move this to Chat or call this for handleGroupPress and then go to chat UI
+    // Load this while showing skeleton chat UI template while this load
     try {
         const groupRef = doc(FIREBASE_DB, "groups", groupId);
         const groupSnap = await getDoc(groupRef);
